@@ -20,10 +20,10 @@ MERGE (i1)-[rel:familia {Relacio:Relacio}]->(i2);
 
 
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vRM4DPeqFmv7w6kLH5msNk6_Hdh1wuExRirgysZKO_Q70L21MKBkDISIyjvdm8shVixl5Tcw_5zCfdg/pub?output=csv" AS row
-WITH ToInteger(row.IND) as IND, row.Location as Location, ToInteger(row.Year) as Year, ToInteger(row.HOUSE_ID) as HOUSE_ID
+WITH ToInteger(row.IND) as IND, row.Location as Municipi, ToInteger(row.Year) as Any_Padro, ToInteger(row.HOUSE_ID) as Id_Llar
 MATCH (i:Individu {Id:IND})
-MATCH (h:Habitatge {Id_Llar:HOUSE_ID})
-MERGE (i)-[rel:viu {Year:Year, HOUSE_ID:HOUSE_ID}]->(h);
+MATCH (h:Habitatge {Id_Llar:Id_Llar})
+MERGE (i)-[rel:viu {Any_Padro:Any_Padro, Id_Llar:Id_Llar, Municipi:Municipi}]->(h);
 
 
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgC8TBmdXhjUOPKJxyiZSpetPYjaRC34gmxHj6H2AWvXTGbg7MLKVdJnwuh5bIeer7WLUi0OigI6wc/pub?output=csv" AS row
