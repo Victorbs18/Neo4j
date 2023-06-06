@@ -1,6 +1,6 @@
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTfU6oJBZhmhzzkV_0-avABPzHTdXy8851ySDbn2gq32WwaNmYxfiBtCGJGOZsMgCWjzlEGX4Zh1wqe/pub?output=csv" as row
 WITH toInteger(row.Id) AS Id, toInteger(row.Year) AS Year, row.second_surname as second_surname, row.name as name, row.surname as surname
-WHERE name IS NOT NULL AND surname IS NOT NULL
+WHERE name <> 'nan' AND surname <> 'nan'
 MERGE (i:Individu {Id:Id})
 SET i.Id=Id, i.Year=Year, i.second_surname=second_surname , i.name=name, i.surname=surname;
 
