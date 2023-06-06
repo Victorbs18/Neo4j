@@ -8,7 +8,7 @@ SET i.Id=Id, i.Year=Year, i.second_surname=second_surname , i.name=name, i.surna
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vT0ZhR6BSO_M72JEmxXKs6GLuOwxm_Oy-0UruLJeX8_R04KAcICuvrwn2OENQhtuvddU5RSJSclHRJf/pub?output=csv" as row
 WITH row.Municipi as Municipi , toInteger(row.Id_Llar) as Id_Llar, toInteger(row.Any_Padro) as Any_Padro, row.Carrer as Carrer, toInteger(row.Numero) as Numero
 WHERE Municipi IS NOT NULL AND Carrer IS NOT NULL AND Numero IS NOT NULL AND Any_Padro IS NOT NULL
-MERGE (h:Habitatge {Municipi:Municipi, ID_Llar:Id_Llar, Any_Padro:Any_Padro})
+MERGE (h:Habitatge {Municipi:Municipi, Id_Llar:Id_Llar, Any_Padro:Any_Padro})
 SET h.Municipi = Municipi , h.Id_Llar = Id_Llar, h.Carrer = Carrer, h.Numero = Numero, h.Any_Padro = Any_Padro;
 
 
