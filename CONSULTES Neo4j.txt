@@ -1,0 +1,25 @@
+CONSULTES Neo4j
+
+#5
+
+MATCH (i:Individu)-[s:SAME_AS]-(r:Individu)
+WHERE i.name = "miguel" AND i.surname = "estape" AND i.second_surname = "bofill"
+RETURN i, s, r
+
+#6
+
+MATCH (i:Individu)-[s:SAME_AS]-(r:Individu)
+WHERE i.name = "miguel" AND i.surname = "estape" AND i.second_surname = "bofill"
+RETURN i.name as Nom, COLLECT(DISTINCT r.surname) as Cognom1, COLLECT(DISTINCT r.second_surname) as Cognom2
+
+#9
+
+MATCH (I:Individu)-[f:familia]->(s:Individu)
+RETURN I.name as individu_1, f.Relacio as relacio_familiar, s.name as individu_2
+
+
+
+
+
+
+
