@@ -30,9 +30,12 @@ RETURN p.name AS name, p.surname AS cognom1, p.second_surname AS cognom2, f.Rela
 MATCH (I:Individu)-[f:familia]->(s:Individu)
 RETURN I.name as individu_1, f.Relacio as relacio_familiar, s.name as individu_2
 
+# 11
 
-
-
-
-
-
+MATCH (i:Individu)-[f:familia {Relacio: 'jefe'}]->(i)
+WHERE EXISTS((i)-[:viu]->(:Habitatge {Municipi: 'CR'}))
+WITH i, size([(i)-[:familia {Relacio: 'fill'}]->() | 1]) + size([(i)-[:familia {Relacio: 'filla'}]->() | 1]) AS num_fills
+WHERE num_fills > 3
+RETURN i.name AS nom, i.surname AS cognom1, i.second_surname AS cognom2, num_fills
+ORDER BY num_fills DESC
+LIMIT 20
