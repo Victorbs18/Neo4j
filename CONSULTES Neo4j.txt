@@ -15,9 +15,9 @@ return h.Any_Padro, N, Cognom
 # 3
 
 MATCH (i:Individu)-[v:viu]->(h:Habitatge)
-WHERE h.Municipi = 'SFLL' AND i.Any_Individu > 1800 AND i.Any_Individu < 1845
-RETURN COUNT(DISTINCT i) AS Poblacio, i.Any_Individu AS Any_Padro, COLLECT(DISTINCT h.Id_Llar) AS Habitatges
-ORDER BY i.Any_Individu
+WHERE h.Municipi = 'SFLL' AND i.Any_Padro > 1800 AND i.Any_Padro < 1845
+RETURN COUNT(DISTINCT i) AS Poblacio, i.Any_Padro AS Any_Padro, COLLECT(DISTINCT h.Id_Llar) AS Habitatges
+ORDER BY i.Any_Padro
 
 # 5
 
