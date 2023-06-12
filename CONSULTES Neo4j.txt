@@ -3,51 +3,50 @@ CONSULTES Neo4j
 # 1
 
 match (i:Individu)-[v:viu {Any_Padro:1866, Municipi:"CR"}]->(h:Habitatge)
-with count(i) as Recompte, collect(i.surname) as Cognom
+with count(i) as Recompte, collect(i.Cognom1) as Cognom
 return Recompte, Cognom
 
 # 2
 
-match (i:Individu)-[v:viu]->(h:Habitatge{Municipi:"SFLL"})
-with count(i) as N, h as h, collect(distinct i.surname) as Cognom
-return h.Any_Padro, N , Cognom
-
+match (i:Individu)-[v:viu]->(h:Habitatge {Municipi:"SFLL"})
+with count(i) as N, h as h, collect(distinct i.Cognom1) as Cognom
+return h.Any_Padro, N, Cognom
 
 # 3
 
 MATCH (i:Individu)-[v:viu]->(h:Habitatge)
-WHERE h.Municipi = 'SFLL' AND i.Year > 1800 AND i.Year < 1845
-RETURN COUNT(DISTINCT i) AS Poblacio, i.Year AS Any_Padro, COLLECT(DISTINCT h.Id_Llar) AS Habitatges
-ORDER BY i.Year
+WHERE h.Municipi = 'SFLL' AND i.Any_Individu > 1800 AND i.Any_Individu < 1845
+RETURN COUNT(DISTINCT i) AS Poblacio, i.Any_Individu AS Any_Padro, COLLECT(DISTINCT h.Id_Llar) AS Habitatges
+ORDER BY i.Any_Individu
 
-#5
+# 5
 
 MATCH (i:Individu)-[s:SAME_AS]-(r:Individu)
-WHERE i.name = "miguel" AND i.surname = "estape" AND i.second_surname = "bofill"
+WHERE i.Nom = "miguel" AND i.Cognom1 = "estape" AND i.Cognom2 = "bofill"
 RETURN i, s, r
 
-#6
+# 6
 
 MATCH (i:Individu)-[s:SAME_AS]-(r:Individu)
-WHERE i.name = "miguel" AND i.surname = "estape" AND i.second_surname = "bofill"
-RETURN i.name as Nom, COLLECT(DISTINCT r.surname) as Cognom1, COLLECT(DISTINCT r.second_surname) as Cognom2
+WHERE i.Nom = "miguel" AND i.Cognom1 = "estape" AND i.Cognom2 = "bofill"
+RETURN i.Nom as Nom, COLLECT(DISTINCT r.Cognom1) as Cognom1, COLLECT(DISTINCT r.Cognom2) as Cognom2
 
 # 7
 
-MATCH (i:Individu {name: 'benito', surname: 'julivert'})
+MATCH (i:Individu {Nom: 'benito', Cognom1: 'julivert'})
 OPTIONAL MATCH (i)-[f:familia]->(p:Individu)
-RETURN p.name AS name, p.surname AS cognom1, p.second_surname AS cognom2, f.Relacio AS tipus_relació
+RETURN p.Nom AS Nom, p.Cognom1 AS Cognom1, p.Cognom2 AS Cognom2, f.Relacio AS tipus_relació
 
 # 9
 
 MATCH (I:Individu)-[f:familia]->(s:Individu)
-RETURN I.name as individu_1, f.Relacio as relacio_familiar, s.name as individu_2
+RETURN I.Nom as individu_1, f.Relacio as relacio_familiar, s.Nom as individu_2
 
 # 10 
 
-match (h:Habitatge{Municipi:"SFLL"})
-return h.Carrer as carer,h.Numero as numero, count(h) as n_padrons,collect(h.Any_Padro) as any
-order by n_padrons desc
+MATCH (h:Habitatge {Municipi:"SFLL"})
+RETURN h.Carrer AS carrer, h.Numero AS numero, count(h) AS n_padrons, COLLECT (h.Any_Padro) as any
+ORDER BY n_padrons DESC
 
 # 11
 
@@ -55,6 +54,6 @@ MATCH (i:Individu)-[f:familia {Relacio: 'jefe'}]->(i)
 WHERE EXISTS((i)-[:viu]->(:Habitatge {Municipi: 'CR'}))
 WITH i, size([(i)-[:familia {Relacio: 'fill'}]->() | 1]) + size([(i)-[:familia {Relacio: 'filla'}]->() | 1]) AS num_fills
 WHERE num_fills > 3
-RETURN i.name AS nom, i.surname AS cognom1, i.second_surname AS cognom2, num_fills
+RETURN i.Nom AS Nom, i.Cognom1 AS Cognom1, i.Cognom2 AS Cognom2, num_fills
 ORDER BY num_fills DESC
 LIMIT 20
