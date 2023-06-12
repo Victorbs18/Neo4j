@@ -1,5 +1,18 @@
 CONSULTES Neo4j
 
+# 1
+
+match (i:Individu)-[v:viu {Any_Padro:1866, Municipi:"CR"}]->(h:Habitatge)
+with count(i) as Recompte, collect(i.surname) as Cognom
+return Recompte, Cognom
+
+# 2
+
+match (i:Individu)-[v:viu]->(h:Habitatge{Municipi:"SFLL"})
+with count(i) as N, h as h, collect(distinct i.surname) as Cognom
+return h.Any_Padro, N , Cognom
+
+
 # 3
 
 MATCH (i:Individu)-[v:viu]->(h:Habitatge)
@@ -25,10 +38,16 @@ MATCH (i:Individu {name: 'benito', surname: 'julivert'})
 OPTIONAL MATCH (i)-[f:familia]->(p:Individu)
 RETURN p.name AS name, p.surname AS cognom1, p.second_surname AS cognom2, f.Relacio AS tipus_relació
 
-#9
+# 9
 
 MATCH (I:Individu)-[f:familia]->(s:Individu)
 RETURN I.name as individu_1, f.Relacio as relacio_familiar, s.name as individu_2
+
+# 10 
+
+match (h:Habitatge{Municipi:"SFLL"})
+return h.Carrer as carer,h.Numero as numero, count(h) as n_padrons,collect(h.Any_Padro) as any
+order by n_padrons desc
 
 # 11
 
