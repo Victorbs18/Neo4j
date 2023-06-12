@@ -2,15 +2,15 @@ CONSULTES Neo4j
 
 # 1
 
-match (i:Individu)-[v:viu {Any_Padro:1866, Municipi:"CR"}]->(h:Habitatge)
-with count(i) as Recompte, collect(i.Cognom1) as Cognom
-return Recompte, Cognom
+MATCH (i:Individu)-[v:viu {Any_Padro: 1866, Municipi: "CR"}]->(h:Habitatge)
+WITH count(i) AS Recompte, collect(i.Cognom1) AS Cognom
+RETURN Recompte, Cognom
 
 # 2
 
-match (i:Individu)-[v:viu]->(h:Habitatge {Municipi:"SFLL"})
-with count(i) as N, h as h, collect(distinct i.Cognom1) as Cognom
-return h.Any_Padro, N, Cognom
+MATCH (i:Individu)-[v:viu]->(h:Habitatge {Municipi:"SFLL"})
+WITH count(i) AS N, h AS h, collect(distinct i.Cognom1) AS Cognom
+RETURN h.Any_Padro, N, Cognom
 
 # 3
 
@@ -29,7 +29,7 @@ RETURN i, s, r
 
 MATCH (i:Individu)-[s:SAME_AS]-(r:Individu)
 WHERE i.Nom = "miguel" AND i.Cognom1 = "estape" AND i.Cognom2 = "bofill"
-RETURN i.Nom as Nom, COLLECT(DISTINCT r.Cognom1) as Cognom1, COLLECT(DISTINCT r.Cognom2) as Cognom2
+RETURN i.Nom AS Nom, COLLECT(DISTINCT r.Cognom1) AS Cognom1, COLLECT(DISTINCT r.Cognom2) AS Cognom2
 
 # 7
 
@@ -40,7 +40,7 @@ RETURN p.Nom AS Nom, p.Cognom1 AS Cognom1, p.Cognom2 AS Cognom2, f.Relacio AS ti
 # 9
 
 MATCH (I:Individu)-[f:familia]->(s:Individu)
-RETURN I.Nom as individu_1, f.Relacio as relacio_familiar, s.Nom as individu_2
+RETURN I.Nom AS individu_1, f.Relacio AS relacio_familiar, s.Nom AS individu_2
 
 # 10 
 
