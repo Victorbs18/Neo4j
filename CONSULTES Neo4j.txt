@@ -83,3 +83,21 @@ CALL {
   RETURN totalLlars
 }
 RETURN mitjaFillsPerHabitatge AS Mitjana_fills, totalHabitatges AS Total_Habitatges,totalFills AS Total_Fills, totalLlars AS TotalLlars
+
+#13
+
+CALL {
+  MATCH (i:Individu)-[r:viu]->(h:Habitatge)
+  WHERE h.Municipi = 'SFLL'
+  WITH h.Any_Padro AS Any_Padro, h.Carrer AS Carrer, count(i) AS Num_Habitants
+  ORDER BY Any_Padro ASC, Num_Habitants ASC
+  RETURN Any_Padro, Carrer, Num_Habitants
+}
+RETURN Any_Padro, min(Carrer) AS Carrer, min(Num_Habitants) AS Min_Habitants
+
+
+
+
+
+
+
