@@ -19,6 +19,12 @@ WHERE h.Municipi = 'SFLL' AND i.Any_Padro > 1800 AND i.Any_Padro < 1845
 RETURN COUNT(DISTINCT i) AS Poblacio, i.Any_Padro AS Any_Padro, COLLECT(DISTINCT h.Id_Llar) AS Habitatges
 ORDER BY i.Any_Padro
 
+# 4
+
+MATCH (i:Individu {Nom: 'rafel', Cognom1: 'marti'})-[:viu]->(h:Habitatge)<-[:viu]-(p:Individu)
+WHERE h.Any_Padro = 1838 AND h.Municipi = 'SFLL'
+RETURN p.Nom
+
 # 5
 
 MATCH (i:Individu)-[s:SAME_AS]-(r:Individu)
@@ -36,6 +42,14 @@ RETURN i.Nom AS Nom, COLLECT(DISTINCT r.Cognom1) AS Cognom1, COLLECT(DISTINCT r.
 MATCH (i:Individu {Nom: 'benito', Cognom1: 'julivert'})
 OPTIONAL MATCH (i)-[f:familia]->(p:Individu)
 RETURN p.Nom AS Nom, p.Cognom1 AS Cognom1, p.Cognom2 AS Cognom2, f.Relacio AS tipus_relació
+
+# 8
+
+MATCH (i:Individu {Nom: 'benito', Cognom1: 'julivert'})
+OPTIONAL MATCH (i)-[f:familia]->(p:Individu)
+WHERE f.Relacio = 'fill' OR f.Relacio = 'filla'
+RETURN p.Nom AS Nom, p.Cognom1 AS Cognom1, p.Cognom2 AS Cognom2, f.Relacio AS tipus_relació
+ORDER BY p.Nom
 
 # 9
 
@@ -57,3 +71,15 @@ WHERE num_fills > 3
 RETURN i.Nom AS Nom, i.Cognom1 AS Cognom1, i.Cognom2 AS Cognom2, num_fills
 ORDER BY num_fills DESC
 LIMIT 20
+
+# 12 (REVISAR NO FUNCIONA)
+
+MATCH (i:Individu)-[f:familia {Relacio: 'jefe'}]->(i)
+WHERE EXISTS((i)-[:viu]->(:Habitatge {Municipi: 'SFLL', Any_Padro: 1881}))
+WITH familia, count(DISTINCT i) AS fills, count(DISTINCT familia)-1 AS habitatges
+WITH sum(fills) AS totalFills, sum(habitatges) AS totalHabitatges, avg(fills) AS mitjaFillsPerHabitatge
+CALL {
+  WITH count(DISTINCT familia)-1 AS totalLlars
+  RETURN totalLlars
+}
+RETURN mitjaFillsPerHabitatge AS Mitjana_fills, totalHabitatges AS Total_Habitatges,totalFills AS Total_Fills, totalLlars AS TotalLlars
