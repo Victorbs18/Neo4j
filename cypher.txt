@@ -1,3 +1,9 @@
+CREATE CONSTRAINT habitatge_unic FOR (h:Habitatge)
+REQUIRE (h.Municipi, h.Id_Llar, h.Any_Padro) IS NODE KEY;
+
+CREATE CONSTRAINT individu_unic FOR (i:Individu)
+REQUIRE i.Id IS UNIQUE;
+
 LOAD CSV WITH HEADERS FROM "https://docs.google.com/spreadsheets/d/e/2PACX-1vTfU6oJBZhmhzzkV_0-avABPzHTdXy8851ySDbn2gq32WwaNmYxfiBtCGJGOZsMgCWjzlEGX4Zh1wqe/pub?output=csv" as row
 WITH toInteger(row.Id) AS Id, toInteger(row.Year) AS Any_Padro, row.name as Nom, row.surname as Cognom1, row.second_surname as Cognom2
 WHERE Nom <> 'nan' AND Cognom1 <> 'nan'
