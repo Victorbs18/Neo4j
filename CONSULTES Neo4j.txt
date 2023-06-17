@@ -2,28 +2,28 @@ CONSULTES Neo4j
 
 # 1
 
-MATCH (i:Individu)-[v:viu {Any_Padro: 1866, Municipi: "CR"}]->(h:Habitatge)
+MATCH (i:Individu)-[v:viu {Any_Padro:1866, Municipi:"CR"}]->(h:Habitatge)
 WITH count(i) AS Recompte, collect(i.Cognom1) AS Cognom
 RETURN Recompte, Cognom
 
 # 2
 
 MATCH (i:Individu)-[v:viu]->(h:Habitatge {Municipi:"SFLL"})
-WITH count(i) AS N, h AS h, collect(distinct i.Cognom1) AS Cognom
-RETURN h.Any_Padro, N, Cognom
+WITH count(i) AS Numero_Habitants, h AS h, collect(DISTINCT i.Cognom1) AS Cognoms
+RETURN h.Any_Padro AS Any_Padro, Numero_Habitants, Cognoms
 
 # 3
 
 MATCH (i:Individu)-[v:viu]->(h:Habitatge)
 WHERE h.Municipi = 'SFLL' AND i.Any_Padro > 1800 AND i.Any_Padro < 1845
-RETURN COUNT(DISTINCT i) AS Poblacio, i.Any_Padro AS Any_Padro, COLLECT(DISTINCT h.Id_Llar) AS Habitatges
+RETURN COUNT(DISTINCT i) AS Poblacio, i.Any_Padro AS Any_Padro, COLLECT(DISTINCT h.Id_Llar) AS Identificadors_Habitatges
 ORDER BY i.Any_Padro
 
 # 4
 
-MATCH (i:Individu {Nom: 'rafel', Cognom1: 'marti'})-[:viu]->(h:Habitatge)<-[:viu]-(p:Individu)
+MATCH (i:Individu {Nom: 'rafel', Cognom1:'marti'})-[:viu]->(h:Habitatge)<-[:viu]-(p:Individu)
 WHERE h.Any_Padro = 1838 AND h.Municipi = 'SFLL'
-RETURN p.Nom
+RETURN p.Nom AS Noms, i, h, p
 
 # 5
 
@@ -35,32 +35,32 @@ RETURN i, s, r
 
 MATCH (i:Individu)-[s:SAME_AS]-(r:Individu)
 WHERE i.Nom = "miguel" AND i.Cognom1 = "estape" AND i.Cognom2 = "bofill"
-RETURN i.Nom AS Nom, COLLECT(DISTINCT r.Cognom1) AS Cognom1, COLLECT(DISTINCT r.Cognom2) AS Cognom2
+RETURN i.Nom AS Nom, COLLECT(DISTINCT r.Cognom1) AS Cognom1,
+COLLECT(DISTINCT r.Cognom2) AS Cognom2
 
 # 7
 
-MATCH (i:Individu {Nom: 'benito', Cognom1: 'julivert'})
-OPTIONAL MATCH (i)-[f:familia]->(p:Individu)
-RETURN p.Nom AS Nom, p.Cognom1 AS Cognom1, p.Cognom2 AS Cognom2, f.Relacio AS tipus_relació
+MATCH (i:Individu {Nom:'benito', Cognom1:'julivert'})-[f:familia]->(p:Individu)
+RETURN p.Nom AS Nom, p.Cognom1 AS Cognom1, p.Cognom2 AS Cognom2,
+f.Relacio AS Tipus_Relacio
 
 # 8
 
-MATCH (i:Individu {Nom: 'benito', Cognom1: 'julivert'})
-OPTIONAL MATCH (i)-[f:familia]->(p:Individu)
+MATCH (i:Individu {Nom:'benito', Cognom1:'julivert'})-[f:familia]->(p:Individu)
 WHERE f.Relacio = 'fill' OR f.Relacio = 'filla'
 RETURN p.Nom AS Nom, p.Cognom1 AS Cognom1, p.Cognom2 AS Cognom2, f.Relacio AS tipus_relació
 ORDER BY p.Nom
 
 # 9
 
-MATCH (I:Individu)-[f:familia]->(s:Individu)
-RETURN I.Nom AS individu_1, f.Relacio AS relacio_familiar, s.Nom AS individu_2
+MATCH (i:Individu)-[f:familia]->(s:Individu)
+RETURN i.Nom AS Individu_1, f.Relacio AS Relacio_Familiar, s.Nom AS Individu_2
 
 # 10 
 
 MATCH (h:Habitatge {Municipi:"SFLL"})
-RETURN h.Carrer AS carrer, h.Numero AS numero, count(h) AS n_padrons, COLLECT (h.Any_Padro) as any
-ORDER BY n_padrons DESC
+RETURN h.Carrer AS Carrer, h.Numero AS Numero, count(h) AS Nombre_Padrons, COLLECT(h.Any_Padro) AS Anys_Padro
+ORDER BY Nombre_Padrons DESC
 
 # 11
 
@@ -68,8 +68,8 @@ MATCH (i:Individu)-[f:familia {Relacio: 'jefe'}]->(i)
 WHERE EXISTS((i)-[:viu]->(:Habitatge {Municipi: 'CR'}))
 WITH i, size([(i)-[:familia {Relacio: 'fill'}]->() | 1]) + size([(i)-[:familia {Relacio: 'filla'}]->() | 1]) AS num_fills
 WHERE num_fills > 3
-RETURN i.Nom AS Nom, i.Cognom1 AS Cognom1, i.Cognom2 AS Cognom2, num_fills
-ORDER BY num_fills DESC
+RETURN i.Nom AS Nom, i.Cognom1 AS Cognom1, i.Cognom2 AS Cognom2, Nombre_Fills
+ORDER BY Nombre_Fills DESC
 LIMIT 20
 
 # 12 (REVISAR NO FUNCIONA)
@@ -94,10 +94,3 @@ CALL {
   RETURN Any_Padro, Carrer, Num_Habitants
 }
 RETURN Any_Padro, min(Carrer) AS Carrer, min(Num_Habitants) AS Min_Habitants
-
-
-
-
-
-
-
